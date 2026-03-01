@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
@@ -11,6 +11,8 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const user = useSelector((store) => store.user);
   const userId = user?._id;
+  const chatRef = useRef(null);
+
 
   const fetchChatMessages = async () => {
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
@@ -32,6 +34,11 @@ const Chat = () => {
   useEffect(() => {
     fetchChatMessages();
   }, []);
+
+  // auto scroll to new chat
+  useEffect(() => {
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  }, [messages]);
 
   useEffect(() => {
     if (!userId) {
@@ -68,7 +75,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="w-3/4 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col">
+    <div ref={chatRef} className="w-3/4 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col">
       <h1 className="p-5 border-b border-gray-600">Chat</h1>
       <div className="flex-1 overflow-scroll p-5">
         {messages.map((msg, index) => {
