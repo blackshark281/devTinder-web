@@ -5,6 +5,7 @@ export const createSocketConnection = () => {
   // if (location.hostname === "localhost") {
   //   return io(BASE_URL);
   // } else {
-    return io("https://devtinder-m5n9.onrender.com", { path: "/api/socket.io", transports: ["websocket"] });
+    // return io("https://devtinder-m5n9.onrender.com", { path: "/api/socket.io", transports: ["websocket"] });
+    return io("https://devtinder-m5n9.onrender.com", { path: "/socket.io", transports: ["websocket"] });
   // }
 };
