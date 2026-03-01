@@ -11,7 +11,7 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const user = useSelector((store) => store.user);
   const userId = user?._id;
-  const chatRef = useRef(null);
+  const bottomRef = useRef(null);
 
 
   const fetchChatMessages = async () => {
@@ -37,7 +37,7 @@ const Chat = () => {
 
   // auto scroll to new chat
   useEffect(() => {
-    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    bottomRef.current?.scrollIntoView({behavior: "smooth"});
   }, [messages]);
 
   useEffect(() => {
@@ -93,6 +93,7 @@ const Chat = () => {
               </div>
               <div className="chat-bubble">{msg.text}</div>
               {/* <div className="chat-footer opacity-50">Seen</div> */}
+              <div ref={bottomRef} />
             </div>
           );
         })}
