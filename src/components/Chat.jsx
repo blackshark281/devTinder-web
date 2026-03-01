@@ -93,10 +93,10 @@ const Chat = () => {
               </div>
               <div className="chat-bubble">{msg.text}</div>
               {/* <div className="chat-footer opacity-50">Seen</div> */}
-              <div ref={bottomRef} />
             </div>
           );
         })}
+        <div ref={bottomRef} />
       </div>
       <div className="p-5 border-t border-gray-600 flex items-center gap-2">
         <input
