@@ -1,23 +1,15 @@
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "../utils/constant";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/feedSlice";
+import {motion, useMotionValue, useTransform, animate} from "framer-motion";
+import { useState } from "react";
 
-const UserCard = ({ user, handleSendRequest }) => {
-  const [people, setPeople] = useState(user);
+const UserCard = ({ user }) => {
+  const { _id, firstName, lastName, photoUrl, age, gender} = user;
+  const dispatch = useDispatch();
 
-  const SwipeCard = ({
-    _id,
-    photoUrl,
-    firstName,
-    lastName,
-    age,
-    gender,
-    index,
-  }) => {
-
-    const handleSendRequest = async (status, userId) => {
+  const handleSendRequest = async (status, userId) => {
     try {
       const res = await axios.post(
         BASE_URL + "/request/send/" + status + "/" + userId,
@@ -28,42 +20,43 @@ const UserCard = ({ user, handleSendRequest }) => {
     } catch (err) {}
   };
 
-    const x = useMotionValue(0);
-    const rotate = useTransform(x, [-200, 200], [-20, 20]);
-    const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
+  const [isGone, setIsGone] = useState(false);
 
-    const isTopCard = index === 0;
+  const x = useMotionValue(0);
 
-    const handleDragEnd = async (event, info) => {
-      if (info.offset.x > 120) {
-        // RIGHT SWIPE → interested
-        await handleSendRequest("interested", _id);
+  // Rotate based on horizontal drag
+  const rotate = useTransform(x, [-200, 200], [-20, 20]);
 
-        animate(x, 1000, { duration: 0.3 });
-        removeCard(_id);
-      } else if (info.offset.x < -120) {
-        // LEFT SWIPE → ignore
-        await handleSendRequest("ignore", _id);
+  // Optional opacity effect
+  const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
 
-        animate(x, -1000, { duration: 0.3 });
-        removeCard(_id);
-      } else {
-        animate(x, 0, { duration: 0.3 });
-      }
-    };
+  const handleDragEnd = async(event, info) => {
+    if (info.offset.x > 120) {
+      // Right swipe
+      await handleSendRequest("interested", _id)
+      animate(x, 1000, { duration: 0.3 });
+      setIsGone(true);
+    } else if (info.offset.x < -120) {
+      // Left swipe
+      await handleSendRequest("ignore", _id)
+      animate(x, -1000, { duration: 0.3 });
+      setIsGone(true);
+    } else {
+      // Snap back
+      animate(x, 0, { duration: 0.3 });
+    }
+  };
 
-    return (
+  if (isGone) return null;
+
+  return (
+    <div className="flex justify-center mt-10">
       <motion.div
-        className="card bg-base-300 w-96 shadow-xl absolute cursor-grab active:cursor-grabbing"
-        style={{
-          x,
-          rotate,
-          opacity,
-          zIndex: people.length - index,
-        }}
-        drag={isTopCard ? "x" : false}
+        className="card bg-base-300 w-96 shadow-xl cursor-grab active:cursor-grabbing"
+        style={{ x, rotate, opacity }}
+        drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        onDragEnd={isTopCard ? handleDragEnd : null}
+        onDragEnd={handleDragEnd}
       >
         <figure>
           <img src={photoUrl} alt="photo" />
@@ -79,26 +72,7 @@ const UserCard = ({ user, handleSendRequest }) => {
           )}
         </div>
       </motion.div>
-    );
-  };
-
-  const removeCard = (id) => {
-    setTimeout(() => {
-      setPeople((prev) => prev.filter((person) => person._id !== id));
-    }, 200);
-  };
-
-  return (
-    <div className="relative h-[600px] w-96 mx-auto mt-10">
-      {people.map((user, index) => (
-        <SwipeCard
-          key={user._id}
-          {...user}
-          index={index}
-        />
-      ))}
     </div>
   );
 };
-
 export default UserCard;
