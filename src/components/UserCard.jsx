@@ -10,7 +10,8 @@ const UserCard = ({ user }) => {
   const dispatch = useDispatch();
 
   const x = useMotionValue(0);
-
+const likeOpacity = useTransform(x, [0, 150], [0, 1]);
+const nopeOpacity = useTransform(x, [0, -150], [0, 1]);
   const rotate = useTransform(x, [-200, 200], [-20, 20]);
   const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
 
@@ -52,6 +53,20 @@ const UserCard = ({ user }) => {
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={handleDragEnd}
     >
+      <motion.div
+        className="absolute top-10 left-6 text-green-500 text-4xl font-bold border-4 border-green-500 px-3 py-1 rounded-lg"
+        style={{ opacity: likeOpacity }}
+      >
+        LIKE
+      </motion.div>
+
+      <motion.div
+        className="absolute top-10 right-6 text-red-500 text-4xl font-bold border-4 border-red-500 px-3 py-1 rounded-lg"
+        style={{ opacity: nopeOpacity }}
+      >
+        NOPE
+      </motion.div>
+
       <figure>
         <img src={photoUrl} alt="photo" />
       </figure>
