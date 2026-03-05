@@ -16,7 +16,7 @@ const UserCard = ({ user }) => {
         {},
         { withCredentials: true }
       );
-      dispatch(removeUserFromFeed(userId));
+      
     } catch (err) {}
   };
 
@@ -36,11 +36,13 @@ const UserCard = ({ user }) => {
       await handleSendRequest("interested", _id)
       animate(x, 1000, { duration: 0.3 });
       setIsGone(true);
+      dispatch(removeUserFromFeed(userId));
     } else if (info.offset.x < -120) {
       // Left swipe
       await handleSendRequest("ignore", _id)
       animate(x, -1000, { duration: 0.3 });
       setIsGone(true);
+      dispatch(removeUserFromFeed(userId));
     } else {
       // Snap back
       animate(x, 0, { duration: 0.3 });
