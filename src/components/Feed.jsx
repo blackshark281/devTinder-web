@@ -25,7 +25,7 @@ const Feed = () => {
     if(!feed || feed.length === 0){
       getFeed();
     } 
-  }, [feed]);
+  }, []);
   if (!feed) return;
 
   if (feed.length <= 0)
