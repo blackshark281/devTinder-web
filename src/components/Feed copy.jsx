@@ -32,24 +32,8 @@ const Feed = () => {
   return (
     feed && (
       <div className="flex justify-center my-10">
-      <div className="relative w-96 h-[550px]">
-
-        {feed.slice(0, 3).map((user, index) => (
-          <div
-            key={user._id}
-            style={{
-              position: "absolute",
-              top: index * 10,
-              zIndex: 10 - index,
-              transform: `scale(${1 - index * 0.05})`,
-            }}
-          >
-            <UserCard user={user} />
-          </div>
-        ))}
-
+        <UserCard user={feed[0]} />
       </div>
-    </div>
     )
   );
 };
