@@ -34,7 +34,7 @@ const Feed = () => {
   return (
     feed && (
       <div className="flex justify-center my-10">
-      <div className="relative w-96 h-[550px]">
+      <div className="relative w-96 h-137.5">
 
         {feed.slice(0, 3).map((user, index) => (
           <div
