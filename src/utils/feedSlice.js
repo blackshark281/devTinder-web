@@ -12,7 +12,7 @@ const feedSlice = createSlice({
       return newFeed;
       return null;
     },
-    removeFeed: () => null
+    removeFeed: () => []
   },
 });
 
